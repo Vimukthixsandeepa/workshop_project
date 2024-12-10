@@ -54,6 +54,17 @@ app.layout = dbc.Container([
         dbc.Col(dcc.Graph(id='line-chart', config={"displayModeBar": False}), width=12)
     ]),
 
+    # Sensory Scores: Bold, Tannin, Sweet, Acidic
+    dbc.Row([
+        dbc.Col(dcc.Graph(id='bold-box-plot', config={"displayModeBar": False}), width=6),
+        dbc.Col(dcc.Graph(id='tannin-box-plot', config={"displayModeBar": False}), width=6)
+    ]),
+
+    dbc.Row([
+        dbc.Col(dcc.Graph(id='sweet-box-plot', config={"displayModeBar": False}), width=6),
+        dbc.Col(dcc.Graph(id='acidic-box-plot', config={"displayModeBar": False}), width=6)
+    ]),
+
     # Footer
     html.Footer(
         "© 2024 Wine Insights, All Rights Reserved",
@@ -67,7 +78,11 @@ app.layout = dbc.Container([
      Output('scatter-plot', 'figure'),
      Output('pie-chart', 'figure'),
      Output('box-plot', 'figure'),
-     Output('line-chart', 'figure')],
+     Output('line-chart', 'figure'),
+     Output('bold-box-plot', 'figure'),
+     Output('tannin-box-plot', 'figure'),
+     Output('sweet-box-plot', 'figure'),
+     Output('acidic-box-plot', 'figure')],
     [Input('country-dropdown', 'value')]
 )
 def update_charts(selected_country):
@@ -119,7 +134,39 @@ def update_charts(selected_country):
         template='plotly_dark'
     )
 
-    return bar_chart, scatter_plot, pie_chart, box_plot, line_chart
+    # Box plot: Bold by wine style
+    bold_box_plot = px.box(
+        filtered_df, x='Wine style', y='Bold',
+        title="Boldness by Wine Style",
+        color='Wine style',
+        template='plotly_dark'
+    )
+
+    # Box plot: Tannin by wine style
+    tannin_box_plot = px.box(
+        filtered_df, x='Wine style', y='Tannin',
+        title="Tannin Level by Wine Style",
+        color='Wine style',
+        template='plotly_dark'
+    )
+
+    # Box plot: Sweet by wine style
+    sweet_box_plot = px.box(
+        filtered_df, x='Wine style', y='Sweet',
+        title="Sweetness by Wine Style",
+        color='Wine style',
+        template='plotly_dark'
+    )
+
+    # Box plot: Acidic by wine style
+    acidic_box_plot = px.box(
+        filtered_df, x='Wine style', y='Acidic',
+        title="Acidity by Wine Style",
+        color='Wine style',
+        template='plotly_dark'
+    )
+
+    return bar_chart, scatter_plot, pie_chart, box_plot, line_chart, bold_box_plot, tannin_box_plot, sweet_box_plot, acidic_box_plot
 
 # Run the app
 if _name_ == '_main_':
